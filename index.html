@@ -55,7 +55,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .hbtn{flex:none;min-width:3rem;height:2.6rem;padding:0 .6rem;border:2px solid var(--line);border-radius:var(--r);background:var(--surface);font-weight:700;font-size:.95rem}
 .hbtn .aa-s{font-size:.75em}
 
-main{max-width:40rem;margin:0 auto;padding:1.25rem 16px 7rem}
+main{max-width:40rem;margin:0 auto;padding:.9rem 16px 7rem}
 
 /* bottom nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -78,11 +78,8 @@ main{max-width:40rem;margin:0 auto;padding:1.25rem 16px 7rem}
 .btn.primary{background:var(--jade);border-color:var(--jade);color:var(--on-jade)}
 
 /* home */
-.hero{padding:.5rem 0 1.25rem;display:grid;gap:.4rem}
-.hero .date{font-weight:700;color:var(--jade);letter-spacing:.02em}
-.names{font-family:var(--f-display);font-weight:400;font-size:clamp(2.1rem,9vw,2.9rem);line-height:1.08}
-.names .amp{display:block;color:var(--seal);font-size:.7em;margin:.1em 0}
-.hero .place{color:var(--ink2)}
+.hero{margin:0 0 .75rem;font-size:1rem;font-weight:700;color:var(--jade);letter-spacing:.02em;line-height:1.35}
+.hero .dot{color:var(--ink2)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1rem;display:grid;gap:.35rem}
 .stack{display:grid;gap:.75rem;margin-bottom:1.25rem}
 .count{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.35rem}
@@ -437,11 +434,7 @@ function viewHome(){
   }
   if(ph.p==="after"||(ph.p==="day"&&ph.mins>=toM(DIN_END))) status=`<div class="card now-card"><p class="big-t">${t.thanks}</p><p class="muted">${t.thanksSub}</p></div>`;
 
-  return `<section class="hero">
-      <p class="date">${t.date}</p>
-      <h1 class="names">Stanley Woo<span class="amp">&amp;</span>Sieu Nang</h1>
-      <p class="place">${t.place}</p>
-    </section>
+  return `<h1 class="hero">${t.date}<span class="dot"> · </span>${t.place}</h1>
     <div class="stack">${status}
       <div class="btn-row"><button class="btn primary" type="button" data-go="seat">${t.findBtn}</button><button class="btn" type="button" data-go="prog">${t.progBtn}</button></div>
     </div>

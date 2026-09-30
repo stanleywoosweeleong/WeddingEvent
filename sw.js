@@ -1,6 +1,6 @@
 /* SS Wedding service worker.
    Bump VERSION every time you change index.html, so phones pick up the new seating/programme. */
-const VERSION = "ss-wedding-2026-0930-1";
+const VERSION = "ss-wedding-2026-0930-2";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 
