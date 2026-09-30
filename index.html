@@ -91,10 +91,23 @@ main{max-width:40rem;margin:0 auto;padding:.9rem 16px 7rem}
 .badge.soft{background:var(--jade-bg);color:var(--jade)}
 .big-t{font-size:1.3rem;font-weight:700;line-height:1.3}
 .muted{color:var(--ink2)}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.day .dh{padding:.5rem 1rem;background:var(--jade);color:var(--on-jade);font-weight:700;letter-spacing:.04em}
+.day .dr{display:grid;grid-template-columns:6.3rem minmax(0,1fr);gap:.7rem;padding:.6rem 1rem;border-top:1px solid var(--line);cursor:pointer;scroll-margin-top:5rem}
+.day .dh+.dr{border-top:0}
+.day .dr:focus-visible{outline:3px solid var(--jade);outline-offset:-3px}
+.day .dr.now{background:var(--seal-bg);box-shadow:inset 0 0 0 2px var(--seal)}
+.day .t{font-weight:700;color:var(--jade);font-variant-numeric:tabular-nums;line-height:1.4}
+.day .tbc{display:block;font-size:.85rem;color:var(--seal)}
+.day .d{display:grid;gap:.1rem;min-width:0;line-height:1.4}
+.day .d .badge{margin-bottom:.15rem}
+.day .dl{color:var(--jade);font-weight:600}
+.day .dw{font-size:.92rem}
 .glance{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
 .glance li{display:grid;grid-template-columns:6.5rem 1fr;gap:.75rem;padding:.75rem 1rem;border-top:1px solid var(--line)}
 .glance li:first-child{border-top:0}
 .glance .t{font-weight:700;color:var(--jade);font-variant-numeric:tabular-nums}
+.glance .tbc{display:block;font-size:.85rem;color:var(--seal)}
 .sec-h{font-family:var(--f-display);font-weight:400;font-size:1.35rem;margin:0 0 .6rem}
 
 /* programme */
@@ -155,6 +168,14 @@ mark{background:var(--seal-bg);color:var(--ink);font-weight:700;padding:0 .15em;
 .thx div:first-child{border-top:0}
 .thx dt{font-weight:700;color:var(--jade)}
 .thx dd{margin:0}
+
+/* schedule clash note */
+.btn.wa{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;box-sizing:border-box}
+.clash-btn{width:100%;border-color:var(--seal);color:var(--seal);background:var(--surface)}
+.clash-btn[aria-pressed="true"]{background:var(--seal);border-color:var(--seal);color:var(--on-seal)}
+.clash{margin-top:.35rem;padding:.55rem .7rem;border:2px solid var(--seal);background:var(--seal-bg);border-radius:var(--r);line-height:1.45}
+.clash-l{display:block;font-weight:700;color:var(--seal);margin-bottom:.15rem}
+.venue+.clash{margin:-.4rem 0 1rem}
 
 /* offline status */
 .offline{margin-top:1.25rem;display:grid;gap:.4rem;font-size:.95rem}
@@ -220,7 +241,7 @@ const CER=[
  {t:"08:15",crew:1,ti:L("Emcee soundcheck","司仪试音","Ujian bunyi pengacara"),who:["Pr Jerry","Kah Ee"]},
  {t:"08:30",crew:1,ti:L("All set-up and soundcheck stop","所有布置与试音结束","Semua persediaan dan ujian bunyi berhenti"),who:["Serena"],
   cues:[{x:L("Alert all parties 15 minutes before","提前15分钟提醒各方","Maklumkan semua pihak 15 minit sebelumnya"),who:["Serena"]}]},
- {t:"08:30",ti:L("Doors open","开门迎宾","Pintu dibuka"),sub:L("Please sign the guest board at the registration desk.","请到报到台在签名板上留名。","Sila tandatangani papan tetamu di meja pendaftaran."),who:["Serena"],
+ {t:"08:30",glance:"gDoors",ti:L("Doors open","开门迎宾","Pintu dibuka"),sub:L("Please sign the guest board at the registration desk.","请到报到台在签名板上留名。","Sila tandatangani papan tetamu di meja pendaftaran."),who:["Serena"],
   cues:[{x:L("Play the Christian songs MP3 playlist as background music","播放基督教诗歌 MP3 歌单作背景音乐","Mainkan senarai lagu Kristian MP3 sebagai muzik latar"),who:["Kah Ee"]},
         {x:L("Guests sign the guest board at the registration desk","宾客在报到台的签名板上签名","Tetamu menandatangani papan tetamu di meja pendaftaran"),who:["Edward","Chin Wan"]}]},
  {t:"08:50",ti:L("First welcome by the emcee","司仪首次欢迎","Alu-aluan pertama oleh pengacara"),sub:L("House rules are announced.","宣布会场须知。","Peraturan dewan diumumkan."),who:["Pr Jerry"],
@@ -280,7 +301,24 @@ const CER=[
  {t:"11:40",crew:1,ti:L("Tear down Hall 2","拆除 Hall 2 布置","Mengemas Hall 2"),who:["Chin Wan","BB"],
   cues:[{x:L("Return Hall 2 to the church by 12:30 pm","须于中午12:30前把 Hall 2 交还教会","Serahkan semula Hall 2 kepada gereja sebelum 12.30 tengah hari")}]}
 ];
+const CER_START="09:00"; /* ceremony agenda; drives the countdown, the day-at-a-glance and the clash list */
 const CER_END="12:30";
+
+/* Places where the planning documents disagree. Shown in the crew run sheet only. */
+const CLASH={
+ start:L("Event agenda: church ceremony at 9:30 AM. Ceremony agenda: 9:00 AM (doors 8:30 AM). This app uses 9:00 AM.",
+         "活动流程表：教会婚礼上午9:30开始；婚礼流程表：上午9:00（上午8:30开门）。本软件采用上午9:00。",
+         "Agenda acara: upacara gereja 9.30 pagi. Agenda upacara: 9.00 pagi (pintu dibuka 8.30 pagi). Aplikasi ini menggunakan 9.00 pagi."),
+ tea:L("Event agenda: 11:30 AM, which clashes with photography until 11:40 AM. Moved to 11:40 AM to match the ceremony agenda. Confirm with Serena.",
+       "活动流程表：上午11:30，与拍照（至上午11:40）冲突。本软件按婚礼流程表改为上午11:40，请向 Serena 确认。",
+       "Agenda acara: 11.30 pagi, bertembung dengan sesi bergambar hingga 11.40 pagi. Dipindah ke 11.40 pagi mengikut agenda upacara. Sahkan dengan Serena."),
+ ref:L("Event agenda: 11:30 AM. Ceremony agenda: 11:40 AM. This app uses 11:40 AM.",
+       "活动流程表：上午11:30；婚礼流程表：上午11:40。本软件采用上午11:40。",
+       "Agenda acara: 11.30 pagi. Agenda upacara: 11.40 pagi. Aplikasi ini menggunakan 11.40 pagi."),
+ sound:L("Event agenda: 5:30 PM. Dinner agenda: 5:00 PM. This app uses 5:00 PM.",
+         "活动流程表：下午5:30；婚宴流程表：下午5:00。本软件采用下午5:00。",
+         "Agenda acara: 5.30 petang. Agenda makan malam: 5.00 petang. Aplikasi ini menggunakan 5.00 petang.")
+};
 
 /* Whole-day event agenda (SWSN Planning - Event Agenda). */
 const COORD_TEL="012-3993684";
@@ -291,7 +329,8 @@ const LOC={
  hall2:L("DUMC Hall 2","DUMC Hall 2","DUMC Hall 2"),
  hangar:L("DUMC Hangar","DUMC Hangar","Hangar DUMC"),
  lunch:L("DUMC lunchroom","DUMC 用餐室","Bilik makan DUMC"),
- around:L("Around DUMC","DUMC 周边","Sekitar DUMC")
+ around:L("Around DUMC","DUMC 周边","Sekitar DUMC"),
+ hxc:L("HXC · United Point","HXC · United Point","HXC · United Point")
 };
 const MORN=[
  {t:"04:30",crew:1,ti:L("Bride's dress-up and make-up","新娘化妆与换装","Pengantin perempuan bersolek dan bersiap"),loc:LOC.upBride,who:["Ben Bernard"],
@@ -311,10 +350,10 @@ const MORN=[
  {t:"08:45",crew:1,ti:L("Groom arrives at DUMC","新郎抵达 DUMC","Pengantin lelaki tiba di DUMC"),loc:LOC.hall2,who:["JunYi","Kai Hong","Jun Quan"]},
  {t:"09:10",crew:1,ti:L("Bride arrives at DUMC","新娘抵达 DUMC","Pengantin perempuan tiba di DUMC"),loc:LOC.hall2,who:["Helen"]}
 ];
-const MORN_END="09:30"; /* church ceremony time on the event agenda */
+const MORN_END="09:25"; /* bridal procession on the ceremony agenda */
 const AFT=[
- {t:"11:30",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),loc:LOC.lunch,who:["Siew Cian"]},
-  {t:"11:40",loc:LOC.hangar,ti:L("Refreshments at the Hangar","在 Hangar 享用茶点","Jamuan ringan di Hangar"),sub:L("Please make your way from Hall 2 to the Hangar.","请从 Hall 2 移步至 Hangar。","Sila bergerak dari Hall 2 ke Hangar."),who:["Serena","Joey"],
+ {t:"11:40",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),loc:LOC.lunch,who:["Siew Cian"],clash:CLASH.tea},
+  {t:"11:40",glance:"gRef",clash:CLASH.ref,loc:LOC.hangar,ti:L("Refreshments at the Hangar","在 Hangar 享用茶点","Jamuan ringan di Hangar"),sub:L("Please make your way from Hall 2 to the Hangar.","请从 Hall 2 移步至 Hangar。","Sila bergerak dari Hall 2 ke Hangar."),who:["Serena","Joey"],
   cues:[{x:L("Emcee directs guests from Hall 2 to the Hangar","司仪引导宾客从 Hall 2 前往 Hangar","Pengacara mengarahkan tetamu dari Hall 2 ke Hangar")}]},
  {t:"12:30",ti:L("Bride and groom mingle with guests","新人与宾客交流","Pengantin beramah mesra dengan tetamu"),loc:LOC.hangar},
  {t:"13:30",crew:1,ti:L("Hangar cleared and returned to DUMC","清理 Hangar 并交还 DUMC","Hangar dikosongkan dan diserahkan semula kepada DUMC"),who:["Serena"]},
@@ -326,10 +365,10 @@ const AFT=[
 const AFT_END="17:00";
 
 const DIN=[
- {t:"17:00",crew:1,ti:L("Soundcheck for the family and friends performances","亲友表演试音","Ujian bunyi untuk persembahan keluarga dan rakan")},
- {t:"17:45",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),who:["Siew Cian"]},
+ {t:"17:00",crew:1,clash:CLASH.sound,ti:L("Soundcheck for the family and friends performances","亲友表演试音","Ujian bunyi untuk persembahan keluarga dan rakan")},
+ {t:"17:45",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),loc:LOC.hxc,who:["Siew Cian"]},
  {t:"18:00",crew:1,ti:L("MC soundcheck and programme run-through with the restaurant","司仪试音并与餐厅核对流程","Ujian bunyi MC dan semakan aturcara bersama restoran"),who:["Elder TC & Dr Jean"]},
- {t:"19:00",ti:L("Reception dinner begins","婚宴开始","Majlis makan malam bermula")},
+ {t:"19:00",glance:"gDin",ti:L("Reception dinner begins","婚宴开始","Majlis makan malam bermula")},
  {t:"19:25",ti:L("Bride and groom march in","新人进场","Pengantin berarak masuk")},
  {t:"19:30",ti:L("Dinner grace","谢饭祷告","Doa makan"),sub:L("By Pr Benny Liew.","由 Benny Liew 牧师祷告。","Oleh Pr Benny Liew."),who:["Pr Benny Liew"]},
  {t:"19:50",ti:L("Couple video","新人视频","Video pasangan"),who:["HXC staff"]},
@@ -343,7 +382,7 @@ const DIN=[
 ];
 const DIN_END="22:30"; /* "End" on the event agenda */
 
-const SEGS={morn:{list:MORN,end:MORN_END},cer:{list:CER,end:CER_END,gEnd:"11:40"},aft:{list:AFT,end:AFT_END,gEnd:"13:30"},din:{list:DIN,end:DIN_END}};
+const SEGS={morn:{list:MORN,end:MORN_END},cer:{list:CER,end:CER_END,gEnd:"11:40",clash:CLASH.start},aft:{list:AFT,end:AFT_END,gEnd:"13:30"},din:{list:DIN,end:DIN_END}};
 const SEG_ORDER=["morn","cer","aft","din"];
 function segData(k,crewMode){const s=SEGS[k];return{src:s.list,list:crewMode?s.list:s.list.filter(x=>!x.crew),end:crewMode?s.end:(s.gEnd||s.end)}}
 function segsFor(crewMode){return SEG_ORDER.filter(k=>segData(k,crewMode).list.length)}
@@ -438,11 +477,11 @@ const WHO=({
 
 /* ================= UI TEXT ================= */
 const UI={
- en:{langBtn:"EN",home:"Today",svc:"Service",svcTitle:"Order of service",reading:"Reading",photoH:"Photo order",photoNote:"The emcee calls each group in this order. Please stay nearby until your group is called.",thanksH:"With thanks",prog:"Programme",seat:"Find table",segMorn:"Morning",segCer:"Ceremony",segAft:"Afternoon",segDin:"Dinner",dinVenue:"HXC · United Point",guest:"Guests",crew:"Crew run sheet",
+ en:{langBtn:"EN",home:"Today",svc:"Service",svcTitle:"Order of service",reading:"Reading",photoH:"Photo order",photoNote:"The emcee calls each group in this order. Please stay nearby until your group is called.",thanksH:"With thanks",prog:"Programme",seat:"Find table",clashLbl:"Schedule clash",tbc:"To be confirmed",shareWa:"Share via WhatsApp",copyTxt:"Copy text",copied:"Copied",waTitle:"Schedule clashes · Stanley & Sieu Nang wedding, 3 October 2026",waAsk:"Please confirm the correct times.",segMorn:"Morning",segCer:"Ceremony",segAft:"After the ceremony",segDin:"Dinner",dinVenue:"HXC · United Point",guest:"Guests",crew:"Crew run sheet",
   cuesFor:"Show cues for",everyone:"Everyone",now:"Now",next:"Next",done:"Done",inCharge:"In charge",music:"Music",crewOnly:"Crew only",
   begins:"The church ceremony begins in",d:"days",h:"hours",m:"min",
   date:"Saturday, 3 October 2026",place:"DUMC Hall 2",findBtn:"Find my table",progBtn:"See the programme",
-  glance:"The day at a glance",gDoors:"Doors open · DUMC Hall 2",gCer:"Church ceremony",gRef:"Refreshments · the Hangar",gDin:"Dinner reception · HXC, United Point",
+  glance:"The whole day",gDoors:"Doors open · DUMC Hall 2",gCer:"Church ceremony",gRef:"Refreshments · the Hangar",gDin:"Dinner reception · HXC, United Point",
   thanks:"Thank you for celebrating with us.",thanksSub:"The seating and programme stay here for your reference.",
   cerVenue:"DUMC Hall 2",coord:"Wedding coordinator: Serena",nothingNow:"Nothing is on right now.",
   noCues:"No cues for this person in this part of the day.",
@@ -450,11 +489,11 @@ const UI={
   none:"No name matches. Try just your surname, or ask at the registration desk.",allTables:"All tables",
   table:n=>n==="main"?"Main table":`Table ${n}`,atTable:"At this table",size:"Text size",lang:"Language",
   offReady:"Saved on this phone. Works without internet.",offNow:"No internet. Showing the copy saved on this phone.",asOf:"Seating and programme as of 30 September 2026"},
- zh:{langBtn:"中文",home:"今天",svc:"程序单",svcTitle:"婚礼程序",reading:"经文",photoH:"合照顺序",photoNote:"司仪会按以下顺序请各组上台合照，请留在附近等候。",thanksH:"由衷感谢",prog:"流程",seat:"找座位",segMorn:"早晨",segCer:"婚礼",segAft:"下午",segDin:"晚宴",dinVenue:"HXC · United Point",guest:"宾客",crew:"工作人员流程",
+ zh:{langBtn:"中文",home:"今天",svc:"程序单",svcTitle:"婚礼程序",reading:"经文",photoH:"合照顺序",photoNote:"司仪会按以下顺序请各组上台合照，请留在附近等候。",thanksH:"由衷感谢",prog:"流程",seat:"找座位",clashLbl:"时间冲突",tbc:"待确认",shareWa:"通过 WhatsApp 分享",copyTxt:"复制文字",copied:"已复制",waTitle:"时间冲突 · Stanley & Sieu Nang 婚礼（2026年10月3日）",waAsk:"请确认正确时间。",segMorn:"早晨",segCer:"婚礼",segAft:"婚礼后",segDin:"晚宴",dinVenue:"HXC · United Point",guest:"宾客",crew:"工作人员流程",
   cuesFor:"只看此人的任务",everyone:"全部",now:"正在进行",next:"接下来",done:"已结束",inCharge:"负责人",music:"音乐",crewOnly:"仅工作人员",
   begins:"距离教会婚礼开始还有",d:"天",h:"小时",m:"分钟",
   date:"2026年10月3日 星期六",place:"DUMC Hall 2",findBtn:"查找我的座位",progBtn:"查看流程",
-  glance:"当天安排",gDoors:"开门迎宾 · DUMC Hall 2",gCer:"教会婚礼",gRef:"茶点 · Hangar",gDin:"婚宴 · HXC, United Point",
+  glance:"全天流程",gDoors:"开门迎宾 · DUMC Hall 2",gCer:"教会婚礼",gRef:"茶点 · Hangar",gDin:"婚宴 · HXC, United Point",
   thanks:"感谢您与我们一同庆祝。",thanksSub:"座位表和流程会继续保留在这里，方便查看。",
   cerVenue:"DUMC Hall 2",coord:"婚礼统筹：Serena",nothingNow:"此刻没有进行中的环节。",
   noCues:"此人在这一段没有任务。",
@@ -462,11 +501,11 @@ const UI={
   none:"找不到这个名字。请只输入姓氏再试，或到报到台询问。",allTables:"全部桌次",
   table:n=>n==="main"?"主桌":`第 ${n} 桌`,atTable:"同桌",size:"字体大小",lang:"语言",
   offReady:"已存入本手机，没有网络也能使用。",offNow:"目前没有网络，正在显示手机里保存的版本。",asOf:"座位与流程更新至2026年9月30日"},
- ms:{langBtn:"BM",home:"Hari ini",svc:"Ibadah",svcTitle:"Aturcara ibadah",reading:"Bacaan",photoH:"Susunan bergambar",photoNote:"Pengacara akan memanggil setiap kumpulan mengikut susunan ini. Sila berada berhampiran sehingga kumpulan anda dipanggil.",thanksH:"Setinggi-tinggi terima kasih",prog:"Aturcara",seat:"Cari meja",segMorn:"Pagi",segCer:"Upacara",segAft:"Petang",segDin:"Makan malam",dinVenue:"HXC · United Point",guest:"Tetamu",crew:"Aturcara kru",
+ ms:{langBtn:"BM",home:"Hari ini",svc:"Ibadah",svcTitle:"Aturcara ibadah",reading:"Bacaan",photoH:"Susunan bergambar",photoNote:"Pengacara akan memanggil setiap kumpulan mengikut susunan ini. Sila berada berhampiran sehingga kumpulan anda dipanggil.",thanksH:"Setinggi-tinggi terima kasih",prog:"Aturcara",seat:"Cari meja",clashLbl:"Pertembungan jadual",tbc:"Belum disahkan",shareWa:"Kongsi melalui WhatsApp",copyTxt:"Salin teks",copied:"Disalin",waTitle:"Pertembungan jadual · Perkahwinan Stanley & Sieu Nang, 3 Oktober 2026",waAsk:"Sila sahkan masa yang betul.",segMorn:"Pagi",segCer:"Upacara",segAft:"Selepas upacara",segDin:"Makan malam",dinVenue:"HXC · United Point",guest:"Tetamu",crew:"Aturcara kru",
   cuesFor:"Tunjuk tugas untuk",everyone:"Semua",now:"Sekarang",next:"Seterusnya",done:"Selesai",inCharge:"Penyelaras",music:"Muzik",crewOnly:"Kru sahaja",
   begins:"Upacara gereja bermula dalam",d:"hari",h:"jam",m:"minit",
   date:"Sabtu, 3 Oktober 2026",place:"DUMC Hall 2",findBtn:"Cari meja saya",progBtn:"Lihat aturcara",
-  glance:"Ringkasan hari ini",gDoors:"Pintu dibuka · DUMC Hall 2",gCer:"Upacara gereja",gRef:"Jamuan ringan · Hangar",gDin:"Majlis makan malam · HXC, United Point",
+  glance:"Sepanjang hari",gDoors:"Pintu dibuka · DUMC Hall 2",gCer:"Upacara gereja",gRef:"Jamuan ringan · Hangar",gDin:"Majlis makan malam · HXC, United Point",
   thanks:"Terima kasih kerana meraikan bersama kami.",thanksSub:"Susunan meja dan aturcara kekal di sini untuk rujukan anda.",
   cerVenue:"DUMC Hall 2",coord:"Penyelaras perkahwinan: Serena",nothingNow:"Tiada acara sedang berlangsung.",
   noCues:"Tiada tugas untuk orang ini dalam bahagian ini.",
@@ -481,8 +520,8 @@ const STORE={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 let lang=STORE.get("ssw-lang"); const firstRun=!["zh","en","ms"].includes(lang); if(firstRun) lang="zh";
 const SIZES=[17,19,22]; let sizeIx=Math.max(0,SIZES.indexOf(+STORE.get("ssw-fs")));
 let offlineReady=false;
-let pickSeg=true;
-let tab="home", day="cer", view="guest", crewWho=null, query="", pendingScroll=false;
+let pickSeg=true, clashOnly=false;
+let tab="home", day="cer", view="crew", crewWho=null, query="", pendingScroll=false;
 
 /* Preview any moment of the day: open the page with #t0930 (= 3 Oct 2026, 9:30 AM Malaysia time) */
 let offset=0;
@@ -522,7 +561,22 @@ function statuses(list,end){
 }
 
 /* ================= VIEWS ================= */
-function itemCard(it,st,crewMode,filterWho,allCrew){
+function segLabels(){const t=u();return{morn:t.segMorn,cer:t.segCer,aft:t.segAft,din:t.segDin}}
+function clashText(){
+  const t=u(), lbl=segLabels(), lines=[`*${t.waTitle}*`,""]; let n=1;
+  SEG_ORDER.forEach(k=>{
+    if(SEGS[k].clash){lines.push(`*${n++}. ${lbl[k]} · ${t.gCer} (${fmtTime(CER_START)})*`,tr(SEGS[k].clash),"")}
+    SEGS[k].list.forEach(it=>{if(it.clash)lines.push(`*${n++}. ${lbl[k]} · ${tr(it.ti)} (${fmtTime(it.t)})*`,tr(it.clash),"")});
+  });
+  lines.push(t.waAsk); return lines.join("\n");
+}
+function copyText(s,btn){
+  const done=()=>{const t=u(),old=btn.textContent;btn.textContent="✓ "+t.copied;setTimeout(()=>{btn.textContent=old},2000)};
+  const fallback=()=>{const ta=document.createElement("textarea");ta.value=s;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}ta.remove()};
+  try{navigator.clipboard.writeText(s).then(done,fallback)}catch(e){fallback()}
+}
+function clashBox(c){const t=u();return `<div class="clash"><span class="clash-l">⚠ ${t.clashLbl}</span>${esc(tr(c))}</div>`}
+function itemCard(it,st,crewMode,filterWho,allCrew,segTag){
   const t=u();
   let cues=it.cues||[];
   if(crewMode&&filterWho&&!(it.who||[]).includes(filterWho)) cues=cues.filter(c=>(c.who||[]).includes(filterWho));
@@ -532,28 +586,18 @@ function itemCard(it,st,crewMode,filterWho,allCrew){
   const cueList=crewMode&&cues.length?`<ul class="cues">${cues.map(c=>`<li>${esc(tr(c.x))}${c.who&&c.who.length?` <span class="who">· ${c.who.map(w=>esc(whoName(w))).join(", ")}</span>`:""}</li>`).join("")}</ul>`:"";
   return `<li class="it ${st}${it.crew?" crew-only":""}">
     <div class="tm">${fmtTime(it.t)}${st==="past"?`<span class="done">✓ ${t.done}</span>`:""}</div>
-    <div class="bd">${st==="now"?`<span class="badge">${t.now}</span>`:""}${crewMode&&it.crew&&!allCrew?`<span class="tag">${t.crewOnly}</span>`:""}
-      <h3>${esc(tr(it.ti))}</h3>${it.loc?`<p class="loc">${esc(tr(it.loc))}</p>`:""}${sub}${songs}${pic}${cueList}</div></li>`;
+    <div class="bd">${segTag?`<span class="tag">${esc(segTag)}</span>`:""}${st==="now"?`<span class="badge">${t.now}</span>`:""}${crewMode&&it.crew&&!allCrew?`<span class="tag">${t.crewOnly}</span>`:""}
+      <h3>${esc(tr(it.ti))}</h3>${it.loc?`<p class="loc">${esc(tr(it.loc))}</p>`:""}${sub}${songs}${pic}${cueList}${crewMode&&it.clash?clashBox(it.clash):""}</div></li>`;
 }
 
 function viewHome(){
   const t=u(), ph=phase();
   let status="";
-  const target=Date.UTC(2026,9,3,1,0); const diff=target-(Date.now()+offset);
+  const [csH,csM]=CER_START.split(":").map(Number); const target=Date.UTC(2026,9,3,csH-8,csM); const diff=target-(Date.now()+offset);
   if(diff>0){
     const D=Math.floor(diff/864e5),H=Math.floor(diff%864e5/36e5),M=Math.floor(diff%36e5/6e4);
     status+=`<div class="card"><span class="lbl">${t.begins}</span>
       <div class="count"><div><b>${D}</b><span>${t.d}</span></div><div><b>${H}</b><span>${t.h}</span></div><div><b>${M}</b><span>${t.m}</span></div></div></div>`;
-  }
-  if(ph.p==="day"){
-    const all=SEG_ORDER.flatMap(k=>{const g=segData(k,false);const st=statuses(g.list,g.end);return g.list.map((x,i)=>({x,s:st[i]}))});
-    const nowI=all.filter(a=>a.s==="now"), nextI=all.find(a=>a.s==="up");
-    nowI.forEach(a=>{status+=`<div class="card now-card"><span class="badge">${t.now}</span>
-      <p class="big-t">${esc(tr(a.x.ti))}</p><p class="muted">${fmtTime(a.x.t)}${a.x.loc?" · "+esc(tr(a.x.loc)):""}${a.x.sub?" · "+esc(tr(a.x.sub)):""}</p>
-      ${a.x.songs?`<p class="songs"><span class="lbl">${t.music}</span>${a.x.songs.map(esc).join(" · ")}</p>`:""}</div>`});
-    if(!nowI.length&&nextI&&diff<=0) status+=`<div class="card"><p>${t.nothingNow}</p></div>`;
-    if(nextI) status+=`<div class="card"><span class="badge soft">${t.next}</span>
-      <p class="big-t">${esc(tr(nextI.x.ti))}</p><p class="muted">${fmtTime(nextI.x.t)}${nextI.x.loc?" · "+esc(tr(nextI.x.loc)):""}${nextI.x.sub?" · "+esc(tr(nextI.x.sub)):""}</p></div>`;
   }
   if(ph.p==="after"||(ph.p==="day"&&ph.mins>=toM(DIN_END))) status=`<div class="card now-card"><p class="big-t">${t.thanks}</p><p class="muted">${t.thanksSub}</p></div>`;
 
@@ -562,12 +606,24 @@ function viewHome(){
       <div class="btn-row"><button class="btn primary" type="button" data-go="seat">${t.findBtn}</button><button class="btn" type="button" data-go="prog">${t.progBtn}</button></div>
     </div>
     <h2 class="sec-h">${t.glance}</h2>
-    <ul class="glance">
-      <li><span class="t">${fmtTime("08:30")}</span><span>${t.gDoors}</span></li>
-      <li><span class="t">${fmtTime("09:00")}</span><span>${t.gCer}</span></li>
-      <li><span class="t">${fmtTime("11:40")}</span><span>${t.gRef}</span></li>
-      <li><span class="t">${fmtTime("19:00")}</span><span>${t.gDin}</span></li>
-    </ul>${offlineNote()}`;
+    <ol class="day">${dayRows()}</ol>${offlineNote()}`;
+}
+
+function dayRows(){
+  const t=u(), lbl=segLabels(), out=[];
+  SEG_ORDER.forEach(k=>{
+    const g=segData(k,true), st=statuses(g.list,g.end), rows=g.list.map((x,i)=>({x,s:st[i]}));
+    if(SEGS[k].clash) rows.push({x:{t:CER_START,ti:L(UI.en.gCer,UI.zh.gCer,UI.ms.gCer),clash:SEGS[k].clash},s:""});
+    rows.sort((a,b)=>toM(a.x.t)-toM(b.x.t));
+    out.push(`<li class="dh">${esc(lbl[k])}</li>`);
+    rows.forEach(({x,s})=>{
+      const who=(x.who||[]).map(whoName).join(", ");
+      out.push(`<li class="dr ${s}" data-goseg="${k}" tabindex="0">
+        <span class="t">${fmtTime(x.t)}${x.clash?`<span class="tbc">⚠ ${t.tbc}</span>`:""}</span>
+        <span class="d">${s==="now"?`<span class="badge">${t.now}</span> `:""}<b>${esc(tr(x.ti))}</b>${x.loc?`<span class="dl">${esc(tr(x.loc))}</span>`:""}${who?`<span class="dw">${esc(who)}</span>`:""}</span></li>`);
+    });
+  });
+  return out.join("");
 }
 
 function offlineNote(){
@@ -613,11 +669,28 @@ function viewProg(){
     </div></div>`:"";
   const place=day==="cer"?t.cerVenue:day==="din"?t.dinVenue:"";
   const coord=crewMode?`${t.coord} · <a class="tel" href="tel:+6${COORD_TEL.replace(/\D/g,"")}">${COORD_TEL}</a>`:"";
-  const venue=place||coord?`<p class="venue">${[place,coord].filter(Boolean).join("<br>")}</p>`:"";
+  const venue=(place||coord?`<p class="venue">${[place,coord].filter(Boolean).join("<br>")}</p>`:"")+(crewMode&&SEGS[day].clash?clashBox(SEGS[day].clash):"");
   const segLbl={morn:t.segMorn,cer:t.segCer,aft:t.segAft,din:t.segDin};
+  const nClash=SEG_ORDER.reduce((a,k)=>a+(SEGS[k].clash?1:0)+SEGS[k].list.filter(x=>x.clash).length,0);
+  if(!crewMode) clashOnly=false;
+  const clashBtn=crewMode&&nClash?`<button type="button" class="btn clash-btn" data-clash="1" aria-pressed="${clashOnly}">⚠ ${t.clashLbl} · ${nClash}</button>`:"";
+  if(crewMode&&clashOnly){
+    const out=[];
+    SEG_ORDER.forEach(k=>{const g=segData(k,true);const st=statuses(g.list,g.end);
+      if(SEGS[k].clash) out.push(`<li class="it"><div class="tm">${fmtTime(CER_START)}</div><div class="bd"><span class="tag">${esc(segLbl[k])}</span><h3>${t.gCer}</h3>${clashBox(SEGS[k].clash)}</div></li>`);
+      g.list.forEach((it,i)=>{if(it.clash) out.push(itemCard(it,st[i],true,null,false,segLbl[k]))});
+    });
+    return `<div class="controls">
+      <div class="seg" role="group"><button type="button" data-view="crew" aria-pressed="true">${t.crew}</button><button type="button" data-view="guest" aria-pressed="false">${t.guest}</button></div>
+      <div class="seg" role="group">${avail.map(k=>`<button type="button" data-day="${k}" aria-pressed="false">${segLbl[k]}</button>`).join("")}</div>
+      ${clashBtn}
+      <div class="btn-row"><a class="btn primary wa" href="https://wa.me/?text=${encodeURIComponent(clashText())}" target="_blank" rel="noopener">${t.shareWa}</a><button type="button" class="btn" data-copyclash="1">${t.copyTxt}</button></div>
+    </div><ol class="tl">${out.join("")}</ol>`;
+  }
   return `<div class="controls">
-      <div class="seg" role="group"><button type="button" data-view="guest" aria-pressed="${!crewMode}">${t.guest}</button><button type="button" data-view="crew" aria-pressed="${crewMode}">${t.crew}</button></div>
+      <div class="seg" role="group"><button type="button" data-view="crew" aria-pressed="${crewMode}">${t.crew}</button><button type="button" data-view="guest" aria-pressed="${!crewMode}">${t.guest}</button></div>
       <div class="seg" role="group">${avail.map(k=>`<button type="button" data-day="${k}" aria-pressed="${day===k}">${segLbl[k]}</button>`).join("")}</div>
+      ${clashBtn}
       ${chips}
     </div>${venue}
     ${rows.length?`<ol class="tl">${rows.map(r=>itemCard(r.it,r.s,crewMode,crewWho,src.every(x=>x.crew))).join("")}</ol>`:`<p class="empty">${t.noCues}</p>`}`;
@@ -660,17 +733,22 @@ function render(){
   document.querySelectorAll(".nav button").forEach(b=>{b.querySelector("span").textContent=t[b.dataset.tab];b.toggleAttribute("aria-current",false);if(b.dataset.tab===tab)b.setAttribute("aria-current","page")});
   $("#main").innerHTML=tab==="home"?viewHome():tab==="svc"?viewSvc():tab==="prog"?viewProg():viewSeat();
   if(tab==="seat"){const q=$("#q");q.addEventListener("input",e=>{query=e.target.value;$("#res").innerHTML=seatResults()})}
-  if((tab==="prog"||tab==="svc")&&pendingScroll){pendingScroll=false;const el=document.querySelector(".it.now,.svc li.now");
+  if((tab==="prog"||tab==="svc"||tab==="home")&&pendingScroll){pendingScroll=false;const el=document.querySelector(".it.now,.svc li.now,.day .dr.now");
     if(el){const smooth=!matchMedia("(prefers-reduced-motion: reduce)").matches;el.scrollIntoView({block:"center",behavior:smooth?"smooth":"auto"})}}
 }
-function setTab(x){tab=x;pendingScroll=x==="prog"||x==="svc";if(x==="prog")pickSeg=true;window.scrollTo(0,0);render()}
+function setTab(x){tab=x;pendingScroll=true;if(x==="prog")pickSeg=true;window.scrollTo(0,0);render()}
 
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.goseg)e.target.click()});
 document.addEventListener("click",e=>{
+  const r=e.target.closest("[data-goseg]");
+  if(r){view="crew";day=r.dataset.goseg;clashOnly=false;crewWho=null;tab="prog";pickSeg=false;pendingScroll=true;window.scrollTo(0,0);render();return}
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.tab) setTab(b.dataset.tab);
   else if(b.dataset.go) setTab(b.dataset.go);
-  else if(b.dataset.day){day=b.dataset.day;pendingScroll=true;render()}
-  else if(b.dataset.view){view=b.dataset.view;crewWho=null;pickSeg=true;pendingScroll=true;render()}
+  else if(b.dataset.day){day=b.dataset.day;clashOnly=false;pendingScroll=true;render()}
+  else if(b.dataset.copyclash){copyText(clashText(),b)}
+  else if(b.dataset.clash){clashOnly=!clashOnly;window.scrollTo(0,0);render()}
+  else if(b.dataset.view){view=b.dataset.view;crewWho=null;clashOnly=false;pickSeg=true;pendingScroll=true;render()}
   else if(b.dataset.who!==undefined){crewWho=b.dataset.who||null;render()}
   else if(b.dataset.lang){lang=b.dataset.lang;STORE.set("ssw-lang",lang);$("#picker").hidden=true;render()}
   else if(b.id==="langBtn"){document.querySelectorAll(".pk-btns button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.lang===lang));$("#picker").hidden=false}
@@ -680,7 +758,7 @@ function applySize(){document.documentElement.style.setProperty("--fs",SIZES[siz
 
 applySize();
 if(firstRun) $("#picker").hidden=false;
-pendingScroll=tab==="prog"||tab==="svc";
+pendingScroll=true;
 render();
 /* Offline: when served from GitHub Pages (https), sw.js keeps a copy of the app on the phone.
    Inside the Claude artifact viewer registration is refused, and the note stays hidden. */
