@@ -59,7 +59,7 @@ main{max-width:40rem;margin:0 auto;padding:.9rem 16px 7rem}
 
 /* bottom nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-.nav-in{max-width:40rem;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.nav-in{max-width:40rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .nav button{border:0;background:none;padding:.5rem .25rem .55rem;display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.85rem;font-weight:600;color:var(--ink2)}
 .nav svg{width:1.7rem;height:1.7rem;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .nav button[aria-current="page"]{color:var(--jade)}
@@ -108,6 +108,8 @@ main{max-width:40rem;margin:0 auto;padding:.9rem 16px 7rem}
 .it.now{border:2px solid var(--seal);background:var(--seal-bg)}
 .it.crew-only{background:var(--bg);border-style:dashed}
 .it.crew-only.now{border-style:solid;background:var(--seal-bg)}
+.loc{font-weight:600;color:var(--jade)}
+.tel{color:var(--jade);font-weight:700;text-underline-offset:.2em}
 .songs{font-style:italic}
 .songs .lbl{font-style:normal;display:inline;margin-right:.35rem}
 .pic .lbl{display:inline;margin-right:.35rem}
@@ -135,6 +137,24 @@ main{max-width:40rem;margin:0 auto;padding:.9rem 16px 7rem}
 .hit h3{font-size:1.35rem}
 mark{background:var(--seal-bg);color:var(--ink);font-weight:700;padding:0 .15em;border-radius:2px;box-shadow:inset 0 -2px 0 var(--seal)}
 .found{margin-bottom:.6rem;font-weight:700}
+
+/* order of service */
+.svc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1.5rem}
+.svc li{display:grid;grid-template-columns:1.8rem minmax(0,1fr);gap:.6rem;padding:.7rem .9rem;border-top:1px solid var(--line);scroll-margin-top:5rem}
+.svc li:first-child{border-top:0;border-radius:var(--r) var(--r) 0 0}
+.svc li:last-child{border-radius:0 0 var(--r) var(--r)}
+.svc li.now{background:var(--seal-bg);box-shadow:inset 0 0 0 2px var(--seal)}
+.svc .n{font-weight:700;color:var(--jade);font-variant-numeric:tabular-nums;line-height:1.4}
+.svc .bd{display:grid;gap:.2rem;min-width:0}
+.svc h3{font-size:1.05rem;font-weight:700;line-height:1.4}
+.svc.photo h3{font-weight:600}
+.lbl.in{display:inline;margin-right:.35rem;font-style:normal}
+.note{margin:-.2rem 0 .7rem}
+.thx{margin:0;display:grid;gap:.1rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.thx div{padding:.6rem .9rem;border-top:1px solid var(--line)}
+.thx div:first-child{border-top:0}
+.thx dt{font-weight:700;color:var(--jade)}
+.thx dd{margin:0}
 
 /* offline status */
 .offline{margin-top:1.25rem;display:grid;gap:.4rem;font-size:.95rem}
@@ -167,6 +187,7 @@ mark{background:var(--seal-bg);color:var(--ink);font-weight:700;padding:0 .15em;
 
 <nav class="nav" aria-label="Sections"><div class="nav-in">
   <button type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="13.5" r="5.5"/><circle cx="15" cy="13.5" r="5.5"/><path d="M10.5 4.5 12 2.8l1.5 1.7L12 6.2z"/></svg><span></span></button>
+  <button type="button" data-tab="svc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span></span></button>
   <button type="button" data-tab="prog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.8"/><path d="M12 7v5l3.2 2"/></svg><span></span></button>
   <button type="button" data-tab="seat"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="12" cy="3.4" r="1.5"/><circle cx="20.6" cy="12" r="1.5"/><circle cx="12" cy="20.6" r="1.5"/><circle cx="3.4" cy="12" r="1.5"/><circle cx="18.1" cy="5.9" r="1.5"/><circle cx="5.9" cy="18.1" r="1.5"/><circle cx="18.1" cy="18.1" r="1.5"/><circle cx="5.9" cy="5.9" r="1.5"/></svg><span></span></button>
 </div></nav>
@@ -256,17 +277,59 @@ const CER=[
  {t:"11:05",ti:L("Photography","拍照","Sesi bergambar"),sub:L("The emcee will announce the photo order.","司仪将宣布拍照顺序。","Pengacara akan mengumumkan susunan bergambar."),who:["Stanley's brothers"],
   cues:[{x:L("Announce the order of photography","宣布拍照顺序","Umumkan susunan bergambar"),who:["Pr Jerry","Kah Ee"]},
         {x:L("Background music continues (Christian songs MP3)","继续播放背景音乐（基督教诗歌 MP3）","Muzik latar diteruskan (lagu Kristian MP3)")}]},
- {t:"11:40",ti:L("Refreshments at the Hangar","在 Hangar 享用茶点","Jamuan ringan di Hangar"),sub:L("Please make your way from Hall 2 to the Hangar.","请从 Hall 2 移步至 Hangar。","Sila bergerak dari Hall 2 ke Hangar."),who:["Serena","Joey"],
-  cues:[{x:L("Emcee directs guests from Hall 2 to the Hangar","司仪引导宾客从 Hall 2 前往 Hangar","Pengacara mengarahkan tetamu dari Hall 2 ke Hangar")}]},
  {t:"11:40",crew:1,ti:L("Tear down Hall 2","拆除 Hall 2 布置","Mengemas Hall 2"),who:["Chin Wan","BB"],
   cues:[{x:L("Return Hall 2 to the church by 12:30 pm","须于中午12:30前把 Hall 2 交还教会","Serahkan semula Hall 2 kepada gereja sebelum 12.30 tengah hari")}]}
 ];
 const CER_END="12:30";
 
+/* Whole-day event agenda (SWSN Planning - Event Agenda). */
+const COORD_TEL="012-3993684";
+const LOC={
+ up:L("United Point Airbnb","United Point 民宿","Airbnb United Point"),
+ upBride:L("United Point Airbnb · Unit A-18-19 (bride)","United Point 民宿 · A-18-19（新娘）","Airbnb United Point · Unit A-18-19 (pengantin perempuan)"),
+ upGroom:L("United Point Airbnb · Unit A-28-21 (groom)","United Point 民宿 · A-28-21（新郎）","Airbnb United Point · Unit A-28-21 (pengantin lelaki)"),
+ hall2:L("DUMC Hall 2","DUMC Hall 2","DUMC Hall 2"),
+ hangar:L("DUMC Hangar","DUMC Hangar","Hangar DUMC"),
+ lunch:L("DUMC lunchroom","DUMC 用餐室","Bilik makan DUMC"),
+ around:L("Around DUMC","DUMC 周边","Sekitar DUMC")
+};
+const MORN=[
+ {t:"04:30",crew:1,ti:L("Bride's dress-up and make-up","新娘化妆与换装","Pengantin perempuan bersolek dan bersiap"),loc:LOC.upBride,who:["Ben Bernard"],
+  cues:[{x:L("Bridesmaids dress up and do make-up with another artist","伴娘由另一位化妆师化妆与换装","Pengapit perempuan bersiap dan bersolek dengan jurusolek lain")}]},
+ {t:"06:00",crew:1,ti:L("Groom's dress-up","新郎换装","Pengantin lelaki bersiap"),loc:LOC.upGroom,who:["JunYi","Kai Hong","Jun Quan"],
+  cues:[{x:L("Groomsmen arrive at the United Point Airbnb (UP)","伴郎抵达 United Point 民宿（UP）","Pengapit lelaki tiba di Airbnb United Point (UP)")}]},
+ {t:"06:15",crew:1,ti:L("Photographers take photos of the groom","摄影师为新郎拍照","Jurugambar mengambil gambar pengantin lelaki"),loc:LOC.upGroom},
+ {t:"06:15",crew:1,ti:L("Relatives and friends help prepare long-life noodles","亲友帮忙准备长寿面","Saudara-mara dan rakan membantu menyediakan mi panjang umur"),who:["Lisa","Elizabeth"],
+  cues:[{x:L("Wedding car at UP by 7:00 AM","婚车须于早上7:00前到达 UP","Kereta pengantin berada di UP sebelum 7.00 pagi"),who:["Dato Puang"]}]},
+ {t:"06:30",crew:1,ti:L("Photographers arrive at the bride's unit","摄影师抵达新娘房间","Jurugambar tiba di unit pengantin perempuan"),loc:LOC.upBride},
+ {t:"07:00",crew:1,ti:L("Groom and groomsmen arrive at the bride's unit","新郎与伴郎抵达新娘房间","Pengantin lelaki dan pengapit tiba di unit pengantin perempuan"),loc:LOC.upBride,
+  cues:[{x:L("Bridal party stands by to welcome the groom and groomsmen","伴娘团准备迎接新郎与伴郎","Rombongan pengantin perempuan bersedia menyambut pengantin lelaki dan pengapit"),who:["Helen","Elisha","Jie Yun"]}]},
+ {t:"08:30",crew:1,ti:L("Groom travels to DUMC","新郎前往 DUMC","Pengantin lelaki bergerak ke DUMC"),who:["Jun Quan"],
+  cues:[{x:L("Groom and Jie Yun follow the groomsman's car","新郎与 Jie Yun 跟随伴郎的车","Pengantin lelaki dan Jie Yun mengikut kereta pengapit")}]},
+ {t:"08:45",crew:1,ti:L("Bride travels to DUMC","新娘前往 DUMC","Pengantin perempuan bergerak ke DUMC"),who:["Helen","Elisha"],
+  cues:[{x:L("Bride follows the wedding car with Helen and Elisha","新娘与 Helen、Elisha 跟随婚车","Pengantin perempuan mengikut kereta pengantin bersama Helen dan Elisha")}]},
+ {t:"08:45",crew:1,ti:L("Groom arrives at DUMC","新郎抵达 DUMC","Pengantin lelaki tiba di DUMC"),loc:LOC.hall2,who:["JunYi","Kai Hong","Jun Quan"]},
+ {t:"09:10",crew:1,ti:L("Bride arrives at DUMC","新娘抵达 DUMC","Pengantin perempuan tiba di DUMC"),loc:LOC.hall2,who:["Helen"]}
+];
+const MORN_END="09:30"; /* church ceremony time on the event agenda */
+const AFT=[
+ {t:"11:30",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),loc:LOC.lunch,who:["Siew Cian"]},
+  {t:"11:40",loc:LOC.hangar,ti:L("Refreshments at the Hangar","在 Hangar 享用茶点","Jamuan ringan di Hangar"),sub:L("Please make your way from Hall 2 to the Hangar.","请从 Hall 2 移步至 Hangar。","Sila bergerak dari Hall 2 ke Hangar."),who:["Serena","Joey"],
+  cues:[{x:L("Emcee directs guests from Hall 2 to the Hangar","司仪引导宾客从 Hall 2 前往 Hangar","Pengacara mengarahkan tetamu dari Hall 2 ke Hangar")}]},
+ {t:"12:30",ti:L("Bride and groom mingle with guests","新人与宾客交流","Pengantin beramah mesra dengan tetamu"),loc:LOC.hangar},
+ {t:"13:30",crew:1,ti:L("Hangar cleared and returned to DUMC","清理 Hangar 并交还 DUMC","Hangar dikosongkan dan diserahkan semula kepada DUMC"),who:["Serena"]},
+ {t:"13:30",crew:1,ti:L("Photo session: bridal party and groomsmen","伴娘团与伴郎团拍照","Sesi bergambar: rombongan pengantin dan pengapit"),loc:LOC.around,who:["Stanley's brothers"]},
+ {t:"14:00",crew:1,ti:L("Bride and groom travel to the Airbnb","新人返回民宿","Pengantin bergerak ke Airbnb"),loc:LOC.up,who:["Dato Puang"]},
+ {t:"14:30",crew:1,ti:L("Rest","休息","Rehat")},
+ {t:"15:00",crew:1,ti:L("Bride dresses up for dinner","新娘换装（晚宴造型）","Pengantin perempuan bersiap untuk makan malam"),loc:LOC.up,who:["Ben Bernard"]}
+];
+const AFT_END="17:00";
+
 const DIN=[
  {t:"17:00",crew:1,ti:L("Soundcheck for the family and friends performances","亲友表演试音","Ujian bunyi untuk persembahan keluarga dan rakan")},
  {t:"17:45",ti:L("Tea ceremony","奉茶礼","Upacara minum teh"),who:["Siew Cian"]},
  {t:"18:00",crew:1,ti:L("MC soundcheck and programme run-through with the restaurant","司仪试音并与餐厅核对流程","Ujian bunyi MC dan semakan aturcara bersama restoran"),who:["Elder TC & Dr Jean"]},
+ {t:"19:00",ti:L("Reception dinner begins","婚宴开始","Majlis makan malam bermula")},
  {t:"19:25",ti:L("Bride and groom march in","新人进场","Pengantin berarak masuk")},
  {t:"19:30",ti:L("Dinner grace","谢饭祷告","Doa makan"),sub:L("By Pr Benny Liew.","由 Benny Liew 牧师祷告。","Oleh Pr Benny Liew."),who:["Pr Benny Liew"]},
  {t:"19:50",ti:L("Couple video","新人视频","Video pasangan"),who:["HXC staff"]},
@@ -278,7 +341,12 @@ const DIN=[
  {t:"21:30",ti:L("Song: 给你们","献唱：给你们","Lagu: 给你们"),sub:L("Sieu Nang's childhood and Melbourne church friends","Sieu Nang 的儿时好友与墨尔本教会朋友","Rakan zaman kanak-kanak dan rakan gereja Melbourne Sieu Nang"),who:["Sieu Nang's friends"]},
  {t:"21:50",ti:L("Songs: 爱的路上只有我和你 & 爱你一万年","献唱：爱的路上只有我和你、爱你一万年","Lagu: 爱的路上只有我和你 & 爱你一万年"),sub:L("Vincent Lau, Sieu Nang's cousin-in-law","Sieu Nang 的亲戚 Vincent Lau","Vincent Lau, sepupu ipar Sieu Nang"),who:["Vincent Lau"]}
 ];
-const DIN_END="22:20"; /* not on the agenda: only stops the "Now" highlight 30 min after the last song starts */
+const DIN_END="22:30"; /* "End" on the event agenda */
+
+const SEGS={morn:{list:MORN,end:MORN_END},cer:{list:CER,end:CER_END,gEnd:"11:40"},aft:{list:AFT,end:AFT_END,gEnd:"13:30"},din:{list:DIN,end:DIN_END}};
+const SEG_ORDER=["morn","cer","aft","din"];
+function segData(k,crewMode){const s=SEGS[k];return{src:s.list,list:crewMode?s.list:s.list.filter(x=>!x.crew),end:crewMode?s.end:(s.gEnd||s.end)}}
+function segsFor(crewMode){return SEG_ORDER.filter(k=>segData(k,crewMode).list.length)}
 
 /* Seating, exactly as on the seating chart (there is no Table 1 or Table 7 on it). */
 const TABLES=[
@@ -303,23 +371,78 @@ const TABLES=[
  {n:20,p:["Chin Chiew Joon & Xin Yi","See Soon Huat","Cikgu Tan Mee Guat","Wong Lee Phing","Mr & Mrs Loo Fong Ming","Mr & Mrs Mike Tam","Shien Yin"]}
 ];
 
+/* Order of service, as on the ceremony slides (2026-1003 deck). t = matching run-sheet time, used only for "Now". */
+const SVC=[
+ {t:"09:20",ti:L("Welcome","欢迎致辞","Kata alu-aluan"),by:L("Pastor Jerry","Jerry 牧师","Pastor Jerry")},
+ {t:"09:20",ti:L("Prayer","始礼祷告","Doa pembukaan"),by:L("Pastor Jerry","Jerry 牧师","Pastor Jerry")},
+ {t:"09:25",ti:L("Bridal Processional","新娘入场","Perarakan pengantin perempuan")},
+ {t:"09:35",ti:L("Worship","赞美敬拜","Pujian dan penyembahan"),by:L("William Ting & Wen Ning","William Ting 与 Wen Ning","William Ting & Wen Ning"),
+  songs:["好喜欢与你在一起 · I Really Love To Be With You (赞美之泉 Stream of Praise)","Holy Forever (Chris Tomlin)"]},
+ {t:"09:45",ti:L("Bible Reading","诵读圣经","Pembacaan Alkitab"),by:L("Edward Ting & Ethan Puang","Edward Ting 与 Ethan Puang","Edward Ting & Ethan Puang"),
+  ref:L("1 John 4:7–19 · God's Love and Ours","约翰一书 4:7–19 · 神是爱","1 Yohanes 4:7–19")},
+ {t:"09:48",ti:L("Message","信息勉励","Khutbah"),by:L("Pastor Angeline","Angeline 牧师","Pastor Angeline")},
+ {t:"10:15",ti:L("Vows & Marriage","结婚仪式","Ikrar dan pernikahan"),by:L("Pastor Angeline","Angeline 牧师","Pastor Angeline")},
+ {t:"10:25",ti:L("Holy Communion","同领圣餐","Perjamuan Kudus")},
+ {t:"10:28",ti:L("Covenant Certificate Signing","誓言签约","Menandatangani sijil perjanjian")},
+ {t:"10:28",ti:L("Song Presentation","诗歌祝福","Persembahan lagu"),by:L("William Ting","William Ting","William Ting"),songs:["In God's Perfect Time"]},
+ {t:"10:40",ti:L("Speech & Gift to Parent","感恩父亲","Ucapan dan hadiah kepada bapa")},
+ {t:"10:45",ti:L("Blessing Prayer","祝福祷告","Doa berkat"),by:L("Elder TC Lau & Dr Jean Ong","TC Lau 长老与 Jean Ong 医生","Elder TC Lau & Dr Jean Ong")},
+ {t:"10:55",ti:L("Benediction","牧师祝福","Doa restu"),by:L("Pastor Lee Choo","Lee Choo 牧师","Pastor Lee Choo")},
+ {t:"11:00",ti:L("Recessional","结婚礼成","Perarakan keluar")},
+ {t:"11:05",ti:L("Photography","合照留念","Sesi bergambar")}
+];
+const SVC_END="11:40";
+const PHOTO=[
+ L("Pastors & Elders","牧师与长老们","Pastor dan penatua"),
+ L("Bridal Party","伴郎伴娘团","Rombongan pengantin"),
+ L("Groom's Parent","新郎父亲","Bapa pengantin lelaki"),
+ L("Groom's Immediate Family","新郎直系家人","Keluarga terdekat pengantin lelaki"),
+ L("Bride's Immediate Family","新娘直系家人","Keluarga terdekat pengantin perempuan"),
+ L("Bride's Relatives","新娘亲戚家族","Saudara-mara pengantin perempuan"),
+ L("Groom's Relatives","新郎亲戚家族","Saudara-mara pengantin lelaki"),
+ L("Bride's Friends","新娘的朋友们","Rakan pengantin perempuan"),
+ L("Bride's Church & Ladies Cell Friends","新娘的教会与姐妹小组朋友","Rakan gereja dan sel wanita pengantin perempuan"),
+ L("Groom's Friends","新郎的朋友们","Rakan pengantin lelaki"),
+ L("The Boys' Brigade 11th Petaling Jaya Company","The Boys' Brigade 11th Petaling Jaya Company","The Boys' Brigade 11th Petaling Jaya Company")
+];
+const THANKS=[
+ [L("Officiating Minister & The Message","主理牧师及证道","Pastor perasmi & khutbah"),"Pr Angeline Tan"],
+ [L("Groomsmen","伴郎","Pengapit lelaki"),"Poh Jun Yi, Ng Jun Quan & Ng Kai Hong"],
+ [L("Bridesmaids","伴娘","Pengapit perempuan"),"Helen Chen, Elisha Ting & Lok Jie Yun"],
+ [L("Master of Ceremonies","婚礼主席","Pengacara majlis"),"Pr Jerry Teo"],
+ [L("Worship Team","敬拜团","Pasukan pujian"),"William Ting & Lee Wen Ning"],
+ [L("Bible Readers","读经","Pembaca Alkitab"),"Edward Ting & Ethan Puang"],
+ [L("Pianist","司琴","Pemain piano"),"Ee Nang Ting"],
+ [L("Prayers","祷告","Doa"),"Elder TC Lau & Dr Jean Ong, Pastor Lew Lee Choo"],
+ [L("PA & Slides","音控与投影","PA & slaid"),"Ong Kah Ee, Jordan Eng"],
+ [L("Photographers","摄影","Jurugambar"),"Woo Swee Siang, Woo Swee Kay & Hu Ching Chung"],
+ [L("Matchmaker","媒人","Orang tengah"),"Vinie Yap"],
+ [L("Pre-Marital Counsellors","婚前辅导","Kaunselor pra-perkahwinan"),"Elder TC Lau & Dr Jean Ong"],
+ [L("Wedding Coordinator","婚礼协调","Penyelaras perkahwinan"),"Serena Ng"],
+ [L("Bridal Car","婚车","Kereta pengantin"),"Dato Puang Chok Soon & David Ting"],
+ [L("Registration","登记","Pendaftaran"),"Chua Chin Wan, Wong Siew Yee & Edward Ting"],
+ [L("Ushers","招待","Penyambut tetamu"),"SIBKL Faith Arise Ladies Cell"],
+ [L("Decoration","场地布置","Hiasan"),"Serena Ng, Joey Ting & Deanna Lee"],
+ [L("Helpers","场地助理","Pembantu"),"The Boys' Brigade 11th Petaling Jaya Company, DUMC"]
+];
+
 /* Names shown in the crew filter that read differently per language */
 const WHO=({
  "Pr Jerry":L("Pr Jerry","Jerry 牧师","Pr Jerry"),"Pr Angeline":L("Pr Angeline","Angeline 牧师","Pr Angeline"),
  "Pr Lee Choo":L("Pr Lee Choo","Lee Choo 牧师","Pr Lee Choo"),"Pr Benny Liew":L("Pr Benny Liew","Benny Liew 牧师","Pr Benny Liew"),
  "Elder TC & Dr Jean":L("Elder TC & Dr Jean","TC 长老与 Jean 医生","Elder TC & Dr Jean"),
  "Stanley's brothers":L("Stanley's brothers","Stanley 的兄弟","Saudara lelaki Stanley"),
- "HXC staff":L("HXC staff","HXC 工作人员","Kakitangan HXC"),
+ "HXC staff":L("HXC staff","HXC 工作人员","Kakitangan HXC"),"Dato Puang":L("Dato Puang","Dato Puang","Dato Puang"),
  "Sieu Nang's friends":L("Sieu Nang's friends","Sieu Nang 的朋友","Rakan Sieu Nang")
 });
 
 /* ================= UI TEXT ================= */
 const UI={
- en:{langBtn:"EN",home:"Today",prog:"Programme",seat:"Find table",cer:"Church ceremony",din:"Dinner reception",guest:"Guests",crew:"Crew run sheet",
+ en:{langBtn:"EN",home:"Today",svc:"Service",svcTitle:"Order of service",reading:"Reading",photoH:"Photo order",photoNote:"The emcee calls each group in this order. Please stay nearby until your group is called.",thanksH:"With thanks",prog:"Programme",seat:"Find table",segMorn:"Morning",segCer:"Ceremony",segAft:"Afternoon",segDin:"Dinner",dinVenue:"HXC · United Point",guest:"Guests",crew:"Crew run sheet",
   cuesFor:"Show cues for",everyone:"Everyone",now:"Now",next:"Next",done:"Done",inCharge:"In charge",music:"Music",crewOnly:"Crew only",
   begins:"The church ceremony begins in",d:"days",h:"hours",m:"min",
   date:"Saturday, 3 October 2026",place:"DUMC Hall 2",findBtn:"Find my table",progBtn:"See the programme",
-  glance:"The day at a glance",gDoors:"Doors open · DUMC Hall 2",gCer:"Church ceremony",gRef:"Refreshments · the Hangar",gDin:"Dinner reception · bride and groom march in",
+  glance:"The day at a glance",gDoors:"Doors open · DUMC Hall 2",gCer:"Church ceremony",gRef:"Refreshments · the Hangar",gDin:"Dinner reception · HXC, United Point",
   thanks:"Thank you for celebrating with us.",thanksSub:"The seating and programme stay here for your reference.",
   cerVenue:"DUMC Hall 2",coord:"Wedding coordinator: Serena",nothingNow:"Nothing is on right now.",
   noCues:"No cues for this person in this part of the day.",
@@ -327,11 +450,11 @@ const UI={
   none:"No name matches. Try just your surname, or ask at the registration desk.",allTables:"All tables",
   table:n=>n==="main"?"Main table":`Table ${n}`,atTable:"At this table",size:"Text size",lang:"Language",
   offReady:"Saved on this phone. Works without internet.",offNow:"No internet. Showing the copy saved on this phone.",asOf:"Seating and programme as of 30 September 2026"},
- zh:{langBtn:"中文",home:"今天",prog:"流程",seat:"找座位",cer:"教会婚礼",din:"婚宴",guest:"宾客",crew:"工作人员流程",
+ zh:{langBtn:"中文",home:"今天",svc:"程序单",svcTitle:"婚礼程序",reading:"经文",photoH:"合照顺序",photoNote:"司仪会按以下顺序请各组上台合照，请留在附近等候。",thanksH:"由衷感谢",prog:"流程",seat:"找座位",segMorn:"早晨",segCer:"婚礼",segAft:"下午",segDin:"晚宴",dinVenue:"HXC · United Point",guest:"宾客",crew:"工作人员流程",
   cuesFor:"只看此人的任务",everyone:"全部",now:"正在进行",next:"接下来",done:"已结束",inCharge:"负责人",music:"音乐",crewOnly:"仅工作人员",
   begins:"距离教会婚礼开始还有",d:"天",h:"小时",m:"分钟",
   date:"2026年10月3日 星期六",place:"DUMC Hall 2",findBtn:"查找我的座位",progBtn:"查看流程",
-  glance:"当天安排",gDoors:"开门迎宾 · DUMC Hall 2",gCer:"教会婚礼",gRef:"茶点 · Hangar",gDin:"婚宴 · 新人进场",
+  glance:"当天安排",gDoors:"开门迎宾 · DUMC Hall 2",gCer:"教会婚礼",gRef:"茶点 · Hangar",gDin:"婚宴 · HXC, United Point",
   thanks:"感谢您与我们一同庆祝。",thanksSub:"座位表和流程会继续保留在这里，方便查看。",
   cerVenue:"DUMC Hall 2",coord:"婚礼统筹：Serena",nothingNow:"此刻没有进行中的环节。",
   noCues:"此人在这一段没有任务。",
@@ -339,11 +462,11 @@ const UI={
   none:"找不到这个名字。请只输入姓氏再试，或到报到台询问。",allTables:"全部桌次",
   table:n=>n==="main"?"主桌":`第 ${n} 桌`,atTable:"同桌",size:"字体大小",lang:"语言",
   offReady:"已存入本手机，没有网络也能使用。",offNow:"目前没有网络，正在显示手机里保存的版本。",asOf:"座位与流程更新至2026年9月30日"},
- ms:{langBtn:"BM",home:"Hari ini",prog:"Aturcara",seat:"Cari meja",cer:"Upacara gereja",din:"Majlis makan malam",guest:"Tetamu",crew:"Aturcara kru",
+ ms:{langBtn:"BM",home:"Hari ini",svc:"Ibadah",svcTitle:"Aturcara ibadah",reading:"Bacaan",photoH:"Susunan bergambar",photoNote:"Pengacara akan memanggil setiap kumpulan mengikut susunan ini. Sila berada berhampiran sehingga kumpulan anda dipanggil.",thanksH:"Setinggi-tinggi terima kasih",prog:"Aturcara",seat:"Cari meja",segMorn:"Pagi",segCer:"Upacara",segAft:"Petang",segDin:"Makan malam",dinVenue:"HXC · United Point",guest:"Tetamu",crew:"Aturcara kru",
   cuesFor:"Tunjuk tugas untuk",everyone:"Semua",now:"Sekarang",next:"Seterusnya",done:"Selesai",inCharge:"Penyelaras",music:"Muzik",crewOnly:"Kru sahaja",
   begins:"Upacara gereja bermula dalam",d:"hari",h:"jam",m:"minit",
   date:"Sabtu, 3 Oktober 2026",place:"DUMC Hall 2",findBtn:"Cari meja saya",progBtn:"Lihat aturcara",
-  glance:"Ringkasan hari ini",gDoors:"Pintu dibuka · DUMC Hall 2",gCer:"Upacara gereja",gRef:"Jamuan ringan · Hangar",gDin:"Majlis makan malam · pengantin berarak masuk",
+  glance:"Ringkasan hari ini",gDoors:"Pintu dibuka · DUMC Hall 2",gCer:"Upacara gereja",gRef:"Jamuan ringan · Hangar",gDin:"Majlis makan malam · HXC, United Point",
   thanks:"Terima kasih kerana meraikan bersama kami.",thanksSub:"Susunan meja dan aturcara kekal di sini untuk rujukan anda.",
   cerVenue:"DUMC Hall 2",coord:"Penyelaras perkahwinan: Serena",nothingNow:"Tiada acara sedang berlangsung.",
   noCues:"Tiada tugas untuk orang ini dalam bahagian ini.",
@@ -358,6 +481,7 @@ const STORE={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 let lang=STORE.get("ssw-lang"); const firstRun=!["zh","en","ms"].includes(lang); if(firstRun) lang="zh";
 const SIZES=[17,19,22]; let sizeIx=Math.max(0,SIZES.indexOf(+STORE.get("ssw-fs")));
 let offlineReady=false;
+let pickSeg=true;
 let tab="home", day="cer", view="guest", crewWho=null, query="", pendingScroll=false;
 
 /* Preview any moment of the day: open the page with #t0930 (= 3 Oct 2026, 9:30 AM Malaysia time) */
@@ -367,6 +491,7 @@ let offset=0;
   if(m){offset=Date.UTC(2026,9,3,+m[1]-8,+m[2])-Date.now();}
   else if(h==="programme"||h==="prog") tab="prog";
   else if(h==="tables"||h==="seat") tab="seat";
+  else if(h==="service"||h==="svc") tab="svc";
   else if(h==="crew"){tab="prog";view="crew";}
 })();
 
@@ -397,7 +522,7 @@ function statuses(list,end){
 }
 
 /* ================= VIEWS ================= */
-function itemCard(it,st,crewMode,filterWho){
+function itemCard(it,st,crewMode,filterWho,allCrew){
   const t=u();
   let cues=it.cues||[];
   if(crewMode&&filterWho&&!(it.who||[]).includes(filterWho)) cues=cues.filter(c=>(c.who||[]).includes(filterWho));
@@ -407,8 +532,8 @@ function itemCard(it,st,crewMode,filterWho){
   const cueList=crewMode&&cues.length?`<ul class="cues">${cues.map(c=>`<li>${esc(tr(c.x))}${c.who&&c.who.length?` <span class="who">· ${c.who.map(w=>esc(whoName(w))).join(", ")}</span>`:""}</li>`).join("")}</ul>`:"";
   return `<li class="it ${st}${it.crew?" crew-only":""}">
     <div class="tm">${fmtTime(it.t)}${st==="past"?`<span class="done">✓ ${t.done}</span>`:""}</div>
-    <div class="bd">${st==="now"?`<span class="badge">${t.now}</span>`:""}${crewMode&&it.crew?`<span class="tag">${t.crewOnly}</span>`:""}
-      <h3>${esc(tr(it.ti))}</h3>${sub}${songs}${pic}${cueList}</div></li>`;
+    <div class="bd">${st==="now"?`<span class="badge">${t.now}</span>`:""}${crewMode&&it.crew&&!allCrew?`<span class="tag">${t.crewOnly}</span>`:""}
+      <h3>${esc(tr(it.ti))}</h3>${it.loc?`<p class="loc">${esc(tr(it.loc))}</p>`:""}${sub}${songs}${pic}${cueList}</div></li>`;
 }
 
 function viewHome(){
@@ -421,16 +546,14 @@ function viewHome(){
       <div class="count"><div><b>${D}</b><span>${t.d}</span></div><div><b>${H}</b><span>${t.h}</span></div><div><b>${M}</b><span>${t.m}</span></div></div></div>`;
   }
   if(ph.p==="day"){
-    const cg=CER.filter(x=>!x.crew), dg=DIN.filter(x=>!x.crew);
-    const cs=statuses(cg,CER_END), ds=statuses(dg,DIN_END);
-    const all=[...cg.map((x,i)=>({x,s:cs[i]})),...dg.map((x,i)=>({x,s:ds[i]}))];
+    const all=SEG_ORDER.flatMap(k=>{const g=segData(k,false);const st=statuses(g.list,g.end);return g.list.map((x,i)=>({x,s:st[i]}))});
     const nowI=all.filter(a=>a.s==="now"), nextI=all.find(a=>a.s==="up");
     nowI.forEach(a=>{status+=`<div class="card now-card"><span class="badge">${t.now}</span>
-      <p class="big-t">${esc(tr(a.x.ti))}</p><p class="muted">${fmtTime(a.x.t)}${a.x.sub?" · "+esc(tr(a.x.sub)):""}</p>
+      <p class="big-t">${esc(tr(a.x.ti))}</p><p class="muted">${fmtTime(a.x.t)}${a.x.loc?" · "+esc(tr(a.x.loc)):""}${a.x.sub?" · "+esc(tr(a.x.sub)):""}</p>
       ${a.x.songs?`<p class="songs"><span class="lbl">${t.music}</span>${a.x.songs.map(esc).join(" · ")}</p>`:""}</div>`});
     if(!nowI.length&&nextI&&diff<=0) status+=`<div class="card"><p>${t.nothingNow}</p></div>`;
     if(nextI) status+=`<div class="card"><span class="badge soft">${t.next}</span>
-      <p class="big-t">${esc(tr(nextI.x.ti))}</p><p class="muted">${fmtTime(nextI.x.t)}${nextI.x.sub?" · "+esc(tr(nextI.x.sub)):""}</p></div>`;
+      <p class="big-t">${esc(tr(nextI.x.ti))}</p><p class="muted">${fmtTime(nextI.x.t)}${nextI.x.loc?" · "+esc(tr(nextI.x.loc)):""}${nextI.x.sub?" · "+esc(tr(nextI.x.sub)):""}</p></div>`;
   }
   if(ph.p==="after"||(ph.p==="day"&&ph.mins>=toM(DIN_END))) status=`<div class="card now-card"><p class="big-t">${t.thanks}</p><p class="muted">${t.thanksSub}</p></div>`;
 
@@ -443,7 +566,7 @@ function viewHome(){
       <li><span class="t">${fmtTime("08:30")}</span><span>${t.gDoors}</span></li>
       <li><span class="t">${fmtTime("09:00")}</span><span>${t.gCer}</span></li>
       <li><span class="t">${fmtTime("11:40")}</span><span>${t.gRef}</span></li>
-      <li><span class="t">${fmtTime("19:25")}</span><span>${t.gDin}</span></li>
+      <li><span class="t">${fmtTime("19:00")}</span><span>${t.gDin}</span></li>
     </ul>${offlineNote()}`;
 }
 
@@ -455,10 +578,28 @@ function offlineNote(){
   return `<div class="offline">${lines.join("")}</div>`;
 }
 
+function viewSvc(){
+  const t=u(); const st=statuses(SVC,SVC_END);
+  const rows=SVC.map((it,i)=>`<li class="${st[i]}"><span class="n">${i+1}</span><div class="bd">
+      ${st[i]==="now"?`<span class="badge">${t.now}</span>`:""}
+      <h3>${esc(tr(it.ti))}</h3>
+      ${it.by?`<p>${esc(tr(it.by))}</p>`:""}
+      ${it.ref?`<p><span class="lbl in">${t.reading}</span>${esc(tr(it.ref))}</p>`:""}
+      ${it.songs?`<p class="songs"><span class="lbl in">${t.music}</span>${it.songs.map(esc).join("<br>")}</p>`:""}
+    </div></li>`).join("");
+  return `<h2 class="sec-h">${t.svcTitle}</h2><ol class="svc">${rows}</ol>
+    <h2 class="sec-h">${t.photoH}</h2><p class="note">${t.photoNote}</p>
+    <ol class="svc photo">${PHOTO.map((p,i)=>`<li><span class="n">${i+1}</span><div class="bd"><h3>${esc(tr(p))}</h3></div></li>`).join("")}</ol>
+    <h2 class="sec-h">${t.thanksH}</h2>
+    <dl class="thx">${THANKS.map(([r,n])=>`<div><dt>${esc(tr(r))}</dt><dd>${esc(n)}</dd></div>`).join("")}</dl>`;
+}
+
 function viewProg(){
   const t=u(); const crewMode=view==="crew";
-  const src=day==="cer"?CER:DIN, end=day==="cer"?CER_END:DIN_END;
-  let list=crewMode?src:src.filter(x=>!x.crew);
+  const avail=segsFor(crewMode);
+  if(!avail.includes(day)) day="cer";
+  if(pickSeg){pickSeg=false;if(phase().p==="day"){let best=-1;avail.forEach(k=>{const g=segData(k,crewMode);statuses(g.list,g.end).forEach((s,i)=>{if(s==="now"&&toM(g.list[i].t)>best){best=toM(g.list[i].t);day=k}})})}}
+  const {src,list,end}=segData(day,crewMode);
   // people for the crew filter, in order of first appearance
   const people=[]; src.forEach(it=>{[...(it.who||[]),...(it.cues||[]).flatMap(c=>c.who||[])].forEach(w=>{if(!people.includes(w))people.push(w)})});
   if(crewWho&&!people.includes(crewWho)) crewWho=null;
@@ -470,13 +611,16 @@ function viewProg(){
       <button type="button" class="chip" data-who="" aria-pressed="${!crewWho}">${t.everyone}</button>
       ${people.map(p=>`<button type="button" class="chip" data-who="${esc(p)}" aria-pressed="${crewWho===p}">${esc(whoName(p))}</button>`).join("")}
     </div></div>`:"";
-  const venue=day==="cer"?`<p class="venue">${t.cerVenue}${crewMode?" · "+t.coord:""}</p>`:"";
+  const place=day==="cer"?t.cerVenue:day==="din"?t.dinVenue:"";
+  const coord=crewMode?`${t.coord} · <a class="tel" href="tel:+6${COORD_TEL.replace(/\D/g,"")}">${COORD_TEL}</a>`:"";
+  const venue=place||coord?`<p class="venue">${[place,coord].filter(Boolean).join("<br>")}</p>`:"";
+  const segLbl={morn:t.segMorn,cer:t.segCer,aft:t.segAft,din:t.segDin};
   return `<div class="controls">
-      <div class="seg" role="group"><button type="button" data-day="cer" aria-pressed="${day==="cer"}">${t.cer}</button><button type="button" data-day="din" aria-pressed="${day==="din"}">${t.din}</button></div>
       <div class="seg" role="group"><button type="button" data-view="guest" aria-pressed="${!crewMode}">${t.guest}</button><button type="button" data-view="crew" aria-pressed="${crewMode}">${t.crew}</button></div>
+      <div class="seg" role="group">${avail.map(k=>`<button type="button" data-day="${k}" aria-pressed="${day===k}">${segLbl[k]}</button>`).join("")}</div>
       ${chips}
     </div>${venue}
-    ${rows.length?`<ol class="tl">${rows.map(r=>itemCard(r.it,r.s,crewMode,crewWho)).join("")}</ol>`:`<p class="empty">${t.noCues}</p>`}`;
+    ${rows.length?`<ol class="tl">${rows.map(r=>itemCard(r.it,r.s,crewMode,crewWho,src.every(x=>x.crew))).join("")}</ol>`:`<p class="empty">${t.noCues}</p>`}`;
 }
 
 const norm=s=>s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9㐀-鿿]+/g," ").trim();
@@ -514,19 +658,19 @@ function render(){
   $("#langBtn").textContent=t.langBtn; $("#langBtn").setAttribute("aria-label",t.lang);
   $("#sizeBtn").setAttribute("aria-label",t.size);
   document.querySelectorAll(".nav button").forEach(b=>{b.querySelector("span").textContent=t[b.dataset.tab];b.toggleAttribute("aria-current",false);if(b.dataset.tab===tab)b.setAttribute("aria-current","page")});
-  $("#main").innerHTML=tab==="home"?viewHome():tab==="prog"?viewProg():viewSeat();
+  $("#main").innerHTML=tab==="home"?viewHome():tab==="svc"?viewSvc():tab==="prog"?viewProg():viewSeat();
   if(tab==="seat"){const q=$("#q");q.addEventListener("input",e=>{query=e.target.value;$("#res").innerHTML=seatResults()})}
-  if(tab==="prog"&&pendingScroll){pendingScroll=false;const el=document.querySelector(".it.now");
+  if((tab==="prog"||tab==="svc")&&pendingScroll){pendingScroll=false;const el=document.querySelector(".it.now,.svc li.now");
     if(el){const smooth=!matchMedia("(prefers-reduced-motion: reduce)").matches;el.scrollIntoView({block:"center",behavior:smooth?"smooth":"auto"})}}
 }
-function setTab(x){tab=x;pendingScroll=x==="prog";window.scrollTo(0,0);render()}
+function setTab(x){tab=x;pendingScroll=x==="prog"||x==="svc";if(x==="prog")pickSeg=true;window.scrollTo(0,0);render()}
 
 document.addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.tab) setTab(b.dataset.tab);
   else if(b.dataset.go) setTab(b.dataset.go);
   else if(b.dataset.day){day=b.dataset.day;pendingScroll=true;render()}
-  else if(b.dataset.view){view=b.dataset.view;crewWho=null;pendingScroll=true;render()}
+  else if(b.dataset.view){view=b.dataset.view;crewWho=null;pickSeg=true;pendingScroll=true;render()}
   else if(b.dataset.who!==undefined){crewWho=b.dataset.who||null;render()}
   else if(b.dataset.lang){lang=b.dataset.lang;STORE.set("ssw-lang",lang);$("#picker").hidden=true;render()}
   else if(b.id==="langBtn"){document.querySelectorAll(".pk-btns button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.lang===lang));$("#picker").hidden=false}
@@ -536,7 +680,7 @@ function applySize(){document.documentElement.style.setProperty("--fs",SIZES[siz
 
 applySize();
 if(firstRun) $("#picker").hidden=false;
-pendingScroll=tab==="prog";
+pendingScroll=tab==="prog"||tab==="svc";
 render();
 /* Offline: when served from GitHub Pages (https), sw.js keeps a copy of the app on the phone.
    Inside the Claude artifact viewer registration is refused, and the note stays hidden. */
