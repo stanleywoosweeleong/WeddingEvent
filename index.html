@@ -768,6 +768,10 @@ function viewProg(){
 }
 
 const norm=s=>[...s].map(c=>T2S[c]||c).join("").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9㐀-鿿]+/g," ").trim();
+/* Other spellings a guest might search for. The seating card still shows the name as on the chart.
+   Woo Swee Siang (Malaysian birth certificate) is registered as Swee Xiang in Taiwan. */
+const ALIASES={"Woo Swee Siang":["Woo Swee Xiang"]};
+
 /* Head count: "夫妇", "Mr & Mrs", "Pastor & Mrs" and "A & B / A and B / A与B / A和B / A及B" are 2 people; "×4" is 4; anything else is 1. */
 function heads(name){const m=name.match(/[×x]\s*(\d+)\s*$/);if(m)return +m[1];if(/夫妇|Mr & Mrs|Pastor & Mrs/.test(name))return 2;if(/ & | and |与|和|及/.test(name))return 2;return 1}
 const tableHeads=tb=>tb.p.reduce((a,p)=>a+heads(p),0);
@@ -784,7 +788,7 @@ function seatResults(){
   const out=[];
   TABLES.forEach(tb=>{
     const numHit=/^\d{1,2}$/.test(q)&&String(tb.n)===q;
-    const hits=tb.p.filter(p=>{const np=norm(p),flat=np.replace(/ /g,"");return toks.every(k=>np.includes(k)||flat.includes(k))});
+    const hits=tb.p.filter(p=>[p,...(ALIASES[p]||[])].some(nm=>{const np=norm(nm),flat=np.replace(/ /g,"");return toks.every(k=>np.includes(k)||flat.includes(k))}));
     if(numHit||hits.length) out.push({tb,hits});
   });
   if(!out.length) return `<p class="empty">${t.none}</p>`;
