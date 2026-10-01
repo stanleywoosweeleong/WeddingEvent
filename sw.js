@@ -1,6 +1,7 @@
 /* SS Wedding service worker.
-   Bump VERSION every time you change index.html, so phones pick up the new seating/programme. */
-const VERSION = "ss-wedding-2026-1001-28";
+   Content changes (seating, programme) need nothing here: the page checks the published index.html itself,
+   reloads with the new copy and shows a toast. Bump VERSION only if you change the icons or the manifest. */
+const VERSION = "ss-wedding-2026-1001-29";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png"];
 
@@ -21,10 +22,12 @@ function withTimeout(p, ms) {
 }
 self.addEventListener("fetch", e => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== "GET" || url.origin !== location.origin) return;
+  if (url.searchParams.has("fresh")) return;          /* the page's update check: always go to the network */
   if (req.mode === "navigate") {
     e.respondWith(
-      withTimeout(fetch(req), 3000)
+      withTimeout(fetch(req, {cache: "no-store"}), 3000)
         .then(res => { if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put("./index.html", copy)); } return res; })
         .catch(() => caches.match("./index.html"))
     );
