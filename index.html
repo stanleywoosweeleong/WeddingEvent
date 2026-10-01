@@ -874,12 +874,15 @@ async function checkUpdate(){
     SS.set("ssw-tried",pub);
     const keys=await caches.keys();
     await Promise.all(keys.map(k=>caches.open(k).then(c=>c.put("./index.html",new Response(txt,{headers:{"Content-Type":"text/html; charset=utf-8"}})))));
-    STORE.set("ssw-updated","1");
     location.reload();
   }catch(e){}finally{checking=false}
 }
 function showToast(msg){const el=$("#toast");el.textContent=msg;el.hidden=false;clearTimeout(showToast.t);showToast.t=setTimeout(()=>{el.hidden=true},4500)}
-if(STORE.get("ssw-updated")==="1"){STORE.set("ssw-updated","");setTimeout(()=>showToast(u().updated),300)}
+/* Toast whenever this phone opens a newer version than it last ran: after a live reload, or when the app is
+   simply opened again after a push. A returning phone from before this check (language already chosen) counts too. */
+(function(){const prev=STORE.get("ssw-code");const returning=prev||STORE.get("ssw-lang");
+  if(returning&&prev!==OWN_CODE)setTimeout(()=>showToast(u().updated),400);
+  STORE.set("ssw-code",OWN_CODE);STORE.set("ssw-updated","")})();
 if("serviceWorker" in navigator){navigator.serviceWorker.ready.then(()=>setTimeout(checkUpdate,1500)).catch(()=>{})}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")checkUpdate()});
 addEventListener("online",checkUpdate);
